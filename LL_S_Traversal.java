@@ -1,6 +1,6 @@
 import java.util.*;
 import java.io.*;
-import java.lang.*;
+import Node.java;
 
 class LL_S_Traversal {
 
@@ -23,11 +23,4 @@ class LL_S_Traversal {
     }
 }
 
-class Node{
-        int data;
-        Node next;
-        Node(int x){
-            data=x;
-            next=null;
-        }
-    }
+
