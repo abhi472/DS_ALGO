@@ -1,3 +1,4 @@
+package linkedList;
 public class LL_S_SortedInsert {
     public static void main(String args[])
     {

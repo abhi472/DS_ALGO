@@ -1,6 +1,9 @@
+package linkedList;
 import java.util.*;
+
+import linkedList.Node.java;
+
 import java.io.*;
-import Node.java;
 
 class LL_S_Traversal {
 

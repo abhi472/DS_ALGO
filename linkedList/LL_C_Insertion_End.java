@@ -1,8 +1,12 @@
+package linkedList;
 import java.util.*;
-import java.io.*;
-import Node.java;
 
-public class LL_C_Insertion_Start {
+import linkedList.Node.java;
+
+import java.io.*;
+
+public class LL_C_Insertion_End {
+    
     public static void main(String args[])
     {
       Node head=new Node(10);
@@ -10,7 +14,7 @@ public class LL_C_Insertion_Start {
     	head.next.next=new Node(30);
     	head.next.next.next=new Node(40);
         head.next.next.next.next = head;
-        head = addStartImproved(head, 46);
+        head = addEnd(head, 46);
     	printlist(head);
 
     }
@@ -24,7 +28,7 @@ public class LL_C_Insertion_Start {
 
     }
 
-    public static Node addStart(Node n, int x) {
+    public static Node addEnd(Node n, int x) {
         Node curr = n;
         Node add = new Node(x);
         do {
@@ -33,15 +37,16 @@ public class LL_C_Insertion_Start {
 
         curr.next = add;
         add.next = n;
-        return add;
+        return n;
     }
 
-      public static Node addStartImproved(Node n, int x) {
+    public static Node addEndImproved(Node n, int x) {
         Node add = new Node(n.data);
         n.data = x;
         add.next = n.next;
         n.next = add;
-        return n;
+        n = n.next;
+        return n ;
     }
     
 
