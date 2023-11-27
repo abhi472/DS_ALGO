@@ -39,5 +39,24 @@ public class PreparedTree {
     node.right.right.right = new TreeNode(80);
     return node;
     }
+
+    public static TreeNode setBSTreeNode() {
+    TreeNode node = new TreeNode(15);
+    node.left = new TreeNode(7);
+    node.right = new TreeNode(23);
+    node.left.left = new TreeNode(3);
+    node.left.right = new TreeNode(11);
+    node.right.left = new TreeNode(19);
+    node.right.right = new TreeNode(27);
+    node.left.left.left = new TreeNode(1);
+    node.left.left.right = new TreeNode(4);
+    node.left.right.left = new TreeNode(9);
+    node.left.right.right = new TreeNode(11);
+    node.right.left.left = new TreeNode(17);
+    node.right.left.right = new TreeNode(21);   
+    node.right.right.left = new TreeNode(25);
+    node.right.right.right = new TreeNode(29);
+    return node;
+    }
     
 }
