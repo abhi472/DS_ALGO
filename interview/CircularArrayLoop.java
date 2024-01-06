@@ -22,10 +22,8 @@ public class CircularArrayLoop {
         int j = 0;
         do {
             map.put(j, -1);
-            if((j+arr[j]) >= len || (j+arr[j])<0 || j == len -1)
-                isLastTraversed = true;
-            j = (j + arr[j]) % len;
-            j = j>=0 ? j : (len - j)%len;   
+            j = (j + (arr[j] % len)) % len; 
+            j = j>=0 ? (len + j)%len : (len - j)%len;   
 
                 
 
