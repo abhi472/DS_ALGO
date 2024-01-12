@@ -2,6 +2,12 @@ package interview;
 
 import java.util.TreeSet;
 
+/**
+ * For array [2,9] & [16,14,8] and d = 3
+ * we return 1, since only 9-8 =1<3
+ * all other differences are more than 3
+ */
+
 public class DifferenceBetweenTwoArrays {
     
     public static void main(String[] args) {
@@ -11,9 +17,6 @@ public class DifferenceBetweenTwoArrays {
         int d = 3;
 
         System.out.println(""+findTheDistanceValue(arr1, arr2, d));
-
-
-        
     }
 
      static int findTheDistanceValue(int[] arr1, int[] arr2, int d) {
