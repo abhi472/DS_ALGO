@@ -8,14 +8,13 @@ import java.util.Arrays;
 
 /**
  * Given an integer K and a queue of integers,
- *  we need to reverse the order of the first K elements of the queue, 
+ * we need to reverse the order of the first K elements of the queue, 
  * leaving the other elements in the same relative order.
  * 
- * Input:
-5 3
-1 2 3 4 5
-Output: 
-3 2 1 4 5
+ * Input: 5 3
+ *        1 2 3 4 5
+ * Output: 
+ *        3 2 1 4 5
  * 
  */
 public class ReverseQueueTillK {
