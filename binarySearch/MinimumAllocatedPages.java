@@ -1,5 +1,7 @@
 package binarySearch;
 
+/*Minimum allocated pages from m books to n students */
+
 public class MinimumAllocatedPages {
     public static void main(String args[]) {
     int arr[] = {10, 5, 30, 1, 2, 5, 10, 10};
