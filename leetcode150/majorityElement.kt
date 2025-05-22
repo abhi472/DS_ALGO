@@ -1,4 +1,6 @@
-    fun majorityElement(nums: IntArray): Int {
+package leetcode150
+
+fun majorityElement(nums: IntArray): Int {
         if(nums.size == 1)
         return nums[0]
         val map:MutableMap<Int, Int> = mutableMapOf()

@@ -1,3 +1,5 @@
+package leetcode150
+
 /**
  * Given an array of time intervals where arr[i] = [starti, endi],
  * the task is to merge all the overlapping intervals into one and output the

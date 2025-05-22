@@ -1,4 +1,4 @@
-
+package leetcode150
 /**
  * Given two sorted arrays a[] and b[] of size n and m respectively, the task is to merge both the arrays
  * and rearrange the elements such that the smallest n elements are in a[] and the remaining m elements
