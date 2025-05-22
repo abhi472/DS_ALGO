@@ -1,0 +1,17 @@
+
+Data Layer
+Api -> Retrofit impl
+Database -> Room
+
+Task Entity:- id: String, title: String: status:[inp,completed, inb], duedate: Date, isSynced: Boolean, uploadTIme: Date
+
+requested from ui -> Usecase(offline+api) -> offile data call first (while the online data is pulled)
+if offline data is empty -> emptystate (some issue with internet)
+as soon as api data is available -> update the local data with api data -> refetch the data from db (if there are any changes in local data after api is called)
+above we talked about read
+create req -> update localdb first -> call for api 
+-> if api fails isSynced = false (in case of failure we would need retry mechanism)
+
+isSynced -> flag: boolean, list<Objects> [(title, value)]
+
+object-> field -> changeddata
