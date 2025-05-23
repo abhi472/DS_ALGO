@@ -7,6 +7,8 @@ package recursion
  * I/P: n = 5, a = 2, b = 5, c = 1
  * O/P: 5 (5 pieces of size 1)
  *
+ * the below solution is taking 3^n solution, this is calculated by taking the upperbound
+ * situation where for any value n, with a=b=c=1, we will have 3^n leaves in recursive tree
  * **/
 fun main() {
 
