@@ -25,6 +25,10 @@ fun allCoinsChange(arr: IntArray, n: Int, s: Int): Int {
 fun allCoinsChangeDP(arr: IntArray, n: Int, s:Int): Int {
     var matrix = Array<IntArray>(n+1){IntArray(s+1) }
 
+    var lost:MutableList<MutableList<Int>> = MutableList(5){ mutableListOf(5) }
+
+    lost[0][1] = 7
+
     for(i in 0..<matrix.size) {
         val row = matrix[i]
         for (j in 0..<row.size) {
