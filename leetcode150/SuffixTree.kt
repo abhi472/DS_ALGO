@@ -1,106 +1,139 @@
 package leetcode150
+class SuffixTree(val strings: List<String>) {
 
-// Data class to represent an edge in the Suffix Tree
-data class SuffixTreeEdge(
-    val label: String,
-    val targetNode: SuffixTreeNode
-)
-
-// Data class for a node in thffix Tree
-class SuffixTreeNode {
-    // A map where the key is the first character of the edge label
-    val children: MutableMap<Char, SuffixTreeEdge> = mutableMapOf()
-
-    // Suffix link, used in advanced construction algorithms, but we can omit it here.
-    // var suffixLink: SuffixTreeNode? = null
-
-    // Storing the suffix index for leaf nodes
-    var suffixIndex: Int? = null
-
-    fun isLeaf(): Boolean = children.isEmpty()
-}
-
-// The Suffix Tree class itself
-class SuffixTree(text: String) {
-    private val root = SuffixTreeNode()
-    private val fullText = if (text.endsWith('$')) text else "$text$"
+    private val root = Node()
+    private var text = ""
+    private var remainder = 0
+    private var active = ActivePoint(root)
+    private var position = -1
+    private var needSuffixLink: Node? = null
+    private var terminators = mutableListOf<Char>()
 
     init {
-        // --- Manual construction of the Suffix Tree for "bandana$" ---
-        buildForBandana()
-    }
-
-    private fun buildForBandana() {
-        // Ensure the text is correct for this manual build
-        if (this.fullText != "bandana$") {
-            println("This manual build is specifically for the string 'bandana$'.")
-            return
+        // Append unique terminal symbols to all strings
+        var term = 0
+        for (s in strings) {
+            val termChar = ('#' + term) // Ensures unique terminators
+            require(termChar !in s) { "String must not contain terminal character $termChar" }
+            terminators.add(termChar)
+            addString(s + termChar)
+            term++
         }
-
-        // Create all necessary nodes
-        val root = this.root
-        val nodeA = SuffixTreeNode()
-        val nodeAN = SuffixTreeNode()
-        val nodeN = SuffixTreeNode()
-
-        // Create leaf nodes with their suffix indices
-        val leaf0 = SuffixTreeNode().apply { suffixIndex = 0 }
-        val leaf1 = SuffixTreeNode().apply { suffixIndex = 1 }
-        val leaf2 = SuffixTreeNode().apply { suffixIndex = 2 }
-        val leaf3 = SuffixTreeNode().apply { suffixIndex = 3 }
-        val leaf4 = SuffixTreeNode().apply { suffixIndex = 4 }
-        val leaf5 = SuffixTreeNode().apply { suffixIndex = 5 }
-        val leaf6 = SuffixTreeNode().apply { suffixIndex = 6 }
-        val leaf7 = SuffixTreeNode().apply { suffixIndex = 7 }
-
-        // Connect nodes from the root
-        root.children['b'] = SuffixTreeEdge("bandana$", leaf0)
-        root.children['a'] = SuffixTreeEdge("a", nodeA)
-        root.children['n'] = SuffixTreeEdge("n", nodeN)
-        root.children['d'] = SuffixTreeEdge("dana$", leaf3)
-        root.children['$'] = SuffixTreeEdge("$", leaf7)
-
-        // Connect children of internal node 'Node_A'
-        nodeA.children['n'] = SuffixTreeEdge("n", nodeAN)
-        nodeA.children['$'] = SuffixTreeEdge("$", leaf6)
-
-        // Connect children of internal node 'Node_AN'
-        nodeAN.children['d'] = SuffixTreeEdge("dana$", leaf1)
-        nodeAN.children['a'] = SuffixTreeEdge("a$", leaf4)
-
-        // Connect children of internal node 'Node_N'
-        nodeN.children['d'] = SuffixTreeEdge("dana$", leaf2)
-        nodeN.children['a'] = SuffixTreeEdge("a$", leaf5)
     }
 
-    /**
-     * Prints a visual representation of the tree structure.
-     */
-    fun visualize() {
-        println("Visualizing Suffix Tree for: '$fullText'")
-        println("(root)")
-        visualizeNode(root, "")
+    private fun addString(s: String) {
+        for (ch in s) {
+            addChar(ch)
+        }
     }
 
-    private fun visualizeNode(node: SuffixTreeNode, prefix: String) {
-        val childrenCount = node.children.size
-        var i = 0
-        node.children.values.sortedBy { it.label }.forEach { edge ->
-            val connector = if (i == childrenCount - 1) "└--" else "├──"
-            val newPrefix = if (i == childrenCount - 1) "    " else "│   "
+    private fun addChar(c: Char) {
+        text += c
+        position++
+        needSuffixLink = null
+        remainder++
 
-            if (edge.targetNode.isLeaf()) {
-                println("$prefix$connector\"${edge.label}\" ---> Leaf(${edge.targetNode.suffixIndex})")
+        while (remainder > 0) {
+            if (active.length == 0) active.edge = position
+
+            val edgeChar = text[active.edge]
+            val next = active.node.children[edgeChar]
+            if (next == null) {
+                // No edge starting with current char, create new leaf
+                active.node.children[edgeChar] = Node(position, text.length - 1).also {
+                    it.indexes.add(findTerminatorIndex(c))
+                    addSuffixLink(active.node)
+                }
             } else {
-                println("$prefix$connector\"${edge.label}\" ---> (Internal Node)")
-                visualizeNode(edge.targetNode, prefix + newPrefix)
+                if (walkDown(next)) continue
+
+                if (text[next.start + active.length] == c) {
+                    active.length++
+                    addSuffixLink(active.node)
+                    break
+                }
+
+                // Split edge
+                val split = Node(next.start, next.start + active.length - 1)
+                active.node.children[edgeChar] = split
+                split.children[c] = Node(position, text.length - 1).also {
+                    it.indexes.add(findTerminatorIndex(c))
+                }
+                next.start += active.length
+                split.children[text[next.start]] = next
+                split.indexes.add(findTerminatorIndex(c))
+
+                addSuffixLink(split)
             }
-            i++
+
+            remainder--
+            if (active.node == root && active.length > 0) {
+                active.length--
+                active.edge = position - remainder + 1
+            } else {
+                active.node = active.node.suffixLink ?: root
+            }
         }
     }
+
+    private fun findTerminatorIndex(c: Char): Int {
+        for ((i, t) in terminators.withIndex()) {
+            if (c == t) return i
+        }
+        return -1
+    }
+
+    private fun walkDown(node: Node): Boolean {
+        val edgeLength = node.edgeLength(position)
+        if (active.length >= edgeLength) {
+            active.edge += edgeLength
+            active.length -= edgeLength
+            active.node = node
+            return true
+        }
+        return false
+    }
+
+    private fun addSuffixLink(node: Node) {
+        needSuffixLink?.suffixLink = node
+        needSuffixLink = node
+    }
+
+    fun printTree() {
+        printTree(root, "")
+    }
+
+    private fun printTree(node: Node, indent: String) {
+        for ((ch, child) in node.children) {
+            val label = text.substring(child.start, child.end.coerceAtMost(position) + 1)
+            println("$indent[$label] -> ${child.indexes}")
+            printTree(child, "$indent  ")
+        }
+    }
+
+    inner class Node(
+        var start: Int = -1,
+        var end: Int = -1
+    ) {
+        val children: MutableMap<Char, Node> = mutableMapOf()
+        var suffixLink: Node? = null
+        val indexes: MutableSet<Int> = mutableSetOf()
+
+        fun edgeLength(currentPos: Int): Int {
+            return (end.coerceAtMost(currentPos) - start + 1)
+        }
+    }
+
+    inner class ActivePoint(var node: Node, var edge: Int = -1, var length: Int = 0)
 }
+
 
 fun main() {
-    val suffixTree = SuffixTree("bandana")
-    suffixTree.visualize()
+
+    val suffixTree = SuffixTree("abcabcbb".split(""))
+
+    suffixTree.printTree()
+
 }
+
+
