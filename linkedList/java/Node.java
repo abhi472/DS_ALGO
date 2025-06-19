@@ -1,4 +1,4 @@
-package linkedList;
+package linkedList.java;
 public class Node{
         public int data;
         public Node next;

@@ -1,4 +1,4 @@
-package linkedList;
+package linkedList.java;
 
 class LL_S_Traversal {
 

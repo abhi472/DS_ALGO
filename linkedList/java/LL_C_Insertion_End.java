@@ -1,4 +1,4 @@
-package linkedList;
+package linkedList.java;
 
 public class LL_C_Insertion_End {
     

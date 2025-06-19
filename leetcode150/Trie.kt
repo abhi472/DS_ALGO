@@ -6,6 +6,51 @@ data class TrieNode(
     var isEndOfWord: Boolean = false
 )
 
+data class DigitTrieNode(
+    val children: Array<DigitTrieNode?> = Array(10){null},
+    var isEnd: Boolean = false
+)
+
+class DigitTrie{
+    private val root = DigitTrieNode()
+
+    fun inset(number: String) {
+        var node = root
+        for (ch in number) {
+            val digit = ch - '0'
+            if (node.children[digit] == null)
+                node.children[digit] = DigitTrieNode()
+            node = node.children[digit]!!
+        }
+        node.isEnd = true
+    }
+
+    fun search(number: String): Boolean {
+        var node = root
+        for (ch in number) {
+            val digit = ch - '0'
+            node = node.children[digit] ?: return false
+        }
+        return node.isEnd
+    }
+
+    fun printLexical(current: String = "", node: DigitTrieNode? = root) {
+        if (node == null) return
+        if (node.isEnd) println(current)
+
+        for (digit in 0..9) {
+            val child = node.children[digit]
+            if (child != null) {
+                printLexical(current + digit, child)
+            }
+        }
+    }
+
+
+}
+
+
+
 class Trie {
     private val root = TrieNode()
 
@@ -35,16 +80,25 @@ class Trie {
     }
 }
 
+
+
 fun main() {
-    val trie = Trie()
-    val myString = "abcde"
+//    val trie = Trie()
+//    val myString = "abcde"
+//
+//    println("Inserting '$myString' into the Trie...")
+//    trie.insert(myString)
+//
+//    // Let's add another word to see how the Trie handles shared prefixes
+//    trie.insert("abcf")
+//
+//    println("\nVisual representation of the Trie:")
+//    trie.printTrie()
 
-    println("Inserting '$myString' into the Trie...")
-    trie.insert(myString)
+    val digitTrie = DigitTrie()
+    for (i in 1..50) {
+        digitTrie.inset(i.toString())
+    }
 
-    // Let's add another word to see how the Trie handles shared prefixes
-    trie.insert("abcf")
-
-    println("\nVisual representation of the Trie:")
-    trie.printTrie()
+    digitTrie.printLexical()
 }

@@ -1,4 +1,4 @@
-package linkedList;
+package linkedList.java;
 public class LL_S_Nth_Node_End {
  public static void main(String args[])
     {

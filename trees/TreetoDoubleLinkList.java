@@ -1,6 +1,6 @@
 package trees;
 
-import linkedList.Node;
+import linkedList.java.Node;
 
 public class TreetoDoubleLinkList {
 

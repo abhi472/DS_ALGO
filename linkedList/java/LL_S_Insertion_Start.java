@@ -1,1 +1,1 @@
-package linkedList;
+package linkedList.java;
